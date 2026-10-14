@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NR-CHEATS v3.1 — Console Snippet</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-0: #050505;
+    --bg-1: #0a0a0a;
+    --bg-2: #101010;
+    --fg-0: #ffffff;
+    --fg-1: rgba(255,255,255,0.72);
+    --fg-2: rgba(255,255,255,0.42);
+    --fg-3: rgba(255,255,255,0.22);
+    --border: rgba(255,255,255,0.08);
+    --border-hi: rgba(255,255,255,0.18);
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg-0);
+    color: var(--fg-0);
+    font-family: 'SF Mono', 'Consolas', 'Monaco', 'Menlo', monospace;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(255,255,255,0.035), transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(255,255,255,0.025), transparent 55%);
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 32px 40px 40px;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+
+  /* ---------- header ---------- */
+  header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 22px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .grip {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 3px;
+    opacity: 0.55;
+  }
+  .grip i {
+    display: block;
+    width: 16px;
+    height: 1.5px;
+    border-radius: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.9), rgba(255,255,255,0.25));
+  }
+
+  h1 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.06);
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--fg-2);
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    margin-left: 6px;
+  }
+
+  .subtitle {
+    font-size: 10px;
+    color: var(--fg-2);
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+  }
+  .meta .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.02);
+  }
+  .meta .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(255,255,255,0.6);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  /* ---------- code panel ---------- */
+  .panel {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background:
+      linear-gradient(180deg, rgba(20,20,20,0.6) 0%, rgba(6,6,6,0.75) 60%, rgba(2,2,2,0.85) 100%);
+    box-shadow:
+      0 24px 64px rgba(0,0,0,0.72),
+      0 2px 8px rgba(0,0,0,0.55),
+      inset 0 1px 0 rgba(255,255,255,0.09),
+      inset 0 -1px 0 rgba(0,0,0,0.5);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .panel::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .panel-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(255,255,255,0.045), transparent);
+    flex-shrink: 0;
+  }
+
+  .dots {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+  }
+  .dots span {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .filename {
+    flex: 1;
+    text-align: center;
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+  }
+  .filename b {
+    color: var(--fg-1);
+    font-weight: 500;
+  }
+
+  /* ---------- copy button ---------- */
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    font: inherit;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-1);
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border: 1px solid var(--border-hi);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .copy-btn:hover {
+    background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.05));
+    border-color: rgba(255,255,255,0.28);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+  .copy-btn:active {
+    transform: translateY(0) scale(0.97);
+  }
+  .copy-btn.copied {
+    background: linear-gradient(180deg, #fff, #dcdcdc);
+    color: #050505;
+    border-color: transparent;
+    box-shadow: 0 4px 18px rgba(255,255,255,0.28), inset 0 1px 0 rgba(255,255,255,0.9);
+  }
+  .copy-btn svg {
+    width: 13px;
+    height: 13px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  }
+  .copy-btn.copied svg {
+    transform: scale(0.85) rotate(-8deg);
+  }
+
+  /* ---------- code area ---------- */
+  .code-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.22) transparent;
+  }
+  .code-scroll::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+  .code-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .code-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0.1));
+    border-radius: 6px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  .code-scroll::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(255,255,255,0.4), rgba(255,255,255,0.18));
+    background-clip: padding-box;
+    border: 2px solid transparent;
+  }
+  .code-scroll::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  .code-inner {
+    display: flex;
+    min-width: max-content;
+    padding: 18px 0;
+  }
+
+  .gutter {
+    padding: 0 18px 0 22px;
+    color: var(--fg-3);
+    font-size: 11.5px;
+    line-height: 1.55;
+    text-align: right;
+    user-select: none;
+    -webkit-user-select: none;
+    border-right: 1px solid var(--border);
+    position: sticky;
+    left: 0;
+    background: linear-gradient(90deg, rgba(10,10,10,0.9), rgba(10,10,10,0.6) 80%, transparent);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 1;
+  }
+
+  pre {
+    padding: 0 24px 0 20px;
+    font-size: 11.5px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.82);
+    white-space: pre;
+    tab-size: 2;
+    font-family: inherit;
+  }
+
+  /* ---------- syntax (subtle, monochrome) ---------- */
+  .tok-key    { color: #ffffff; font-weight: 500; }
+  .tok-str    { color: rgba(255,255,255,0.55); }
+  .tok-com    { color: rgba(255,255,255,0.28); font-style: italic; }
+  .tok-num    { color: rgba(255,255,255,0.7); }
+  .tok-fn     { color: rgba(255,255,255,0.95); }
+  .tok-punc   { color: rgba(255,255,255,0.42); }
+  .tok-prop   { color: rgba(255,255,255,0.66); }
+  .tok-tmpl   { color: rgba(255,255,255,0.5); }
+
+  /* ---------- footer ---------- */
+  footer {
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+  }
+  footer .left { display: flex; gap: 20px; align-items: center; }
+  kbd {
+    display: inline-block;
+    padding: 2px 7px;
+    border: 1px solid var(--border-hi);
+    border-radius: 4px;
+    background: rgba(255,255,255,0.03);
+    color: var(--fg-1);
+    font-family: inherit;
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 700px) {
+    .wrap { padding: 18px; }
+    header { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .meta { flex-wrap: wrap; }
+    pre, .gutter { font-size: 10.5px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <span class="grip"><i></i><i></i><i></i></span>
+        <div>
+          <h1>NR-CHEATS <em>V3.1</em></h1>
+          <div class="subtitle">Monochrome · Draggable · RMB-Aimbot</div>
+        </div>
+      </div>
+      <div class="meta">
+        <span class="chip"><span class="dot"></span>Ready</span>
+        <span id="lineCount">— lines</span>
+      </div>
+    </header>
+
+    <div class="panel">
+      <div class="panel-bar">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <div class="filename">paste into console · <b>__gameReady === true</b></div>
+        <button class="copy-btn" id="copyBtn" type="button" aria-label="Copy code">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="9" y="9" width="11" height="11" rx="2"></rect>
+            <path d="M6 15V6a2 2 0 0 1 2-2h9"></path>
+          </svg>
+          <span id="copyLabel">Copy</span>
+        </button>
+      </div>
+
+      <div class="code-scroll" id="codeScroll">
+        <div class="code-inner">
+          <div class="gutter" id="gutter"></div>
+          <pre id="codeBlock"></pre>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="left">
+        <span>Panel · <kbd>V</kbd></span>
+        <span>Aimbot · <kbd>K</kbd> + RMB</span>
+        <span>Silent · <kbd>X</kbd></span>
+        <span>Panic · <kbd>`</kbd></span>
+      </div>
+      <div>Click copy → paste in DevTools console</div>
+    </footer>
+  </div>
+
+  <script id="payload" type="text/plain">(() => {
+  /* ============================================================
+     NR-CHEATS v3.1 — monochrome pro · draggable · RMB-aimbot
+     ============================================================ */
+  if (window.__cheats && window.__cheats.destroy) window.__cheats.destroy();
+  const D = window.__dbg;
+  if (!D || !window.__gameReady) {
+    console.warn('[NR-CHEATS] game not ready — wait for window.__gameReady === true, then paste again.');
+    return;
+  }
+
+  const S = D.S, player = D.player, keys = D.keys, net = D.net;
+  const V3 = player.pos.constructor;
+  const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+  const lerp = (a,b,t)=>a+(b-a)*t;
+  const angDiff = (a,b)=>{ let d=a-b; while(d>Math.PI)d-=2*Math.PI; while(d<-Math.PI)d+=2*Math.PI; return d; };
+  const K = id => D.bindCode(id);
+
+  /* ---------------------------------------------------------------
+     STATE
+  --------------------------------------------------------------- */
+  const st = {
+    aimbot:false, silentAim:false, autoFire:false, noRecoil:false, noSpread:false,
+    rapidFire:false, instantReload:false,
+    aimFov:120, aimSmooth:0.42, aimTarget:'crosshair',
+    silentFov:200, silentSmooth:1.0,
+    fly:false, speed:false, bhop:false, infJump:false, noClip:false, slideSpam:false,
+    flySpeed:20, speedMul:2.4,
+    esp:false, espBoxes:true, espNames:true, espHealth:true, espTracers:false, espDistance:false,
+    fovCircle:true,
+    god:false, infAmmo:false,
+    autoKill:false,
+    panel:true, tab:'combat',
+    panicKey:'Backquote',
+    panelPos:null,
+  };
+
+  const orig = {
+    rarity: D.RARITIES.map(r => ({ dmg:r.dmg, spread:r.spread, recoil:r.recoil })),
+    knife:  D.KNIFE_DEFS.map(k => ({ dmg:k.dmg, backstab:k.backstab })),
+    maxHp:  player.maxHp,
+    weapons: D.WEAPONS.map(w => ({ rpm:w.rpm, spread:w.spread, adsSpread:w.adsSpread, recoil:w.recoil, reloadS:w.reloadS })),
+  };
+
+  /* ---------------------------------------------------------------
+     RIGHT-CLICK TRACKING (for aimbot gating)
+     The game's internal mouseR flag is not exposed, so we hook the
+     same window events it uses. Capture phase means we fire first.
+  --------------------------------------------------------------- */
+  let rmbHeld = false;
+  function onRmbDown(e){ if (e.button === 2) rmbHeld = true; }
+  function onRmbUp(e){ if (e.button === 2) rmbHeld = false; }
+  function onWindowBlur(){ rmbHeld = false; }
+  window.addEventListener('mousedown', onRmbDown, true);
+  window.addEventListener('mouseup', onRmbUp, true);
+  window.addEventListener('blur', onWindowBlur);
+  // Some setups route right-click to the canvas; also catch it there.
+  document.addEventListener('mousedown', onRmbDown, true);
+  document.addEventListener('mouseup', onRmbUp, true);
+
+  /* ---------------------------------------------------------------
+     HOTKEYS
+  --------------------------------------------------------------- */
+  const BINDS = {
+    togglePanel:'KeyV',
+    aimbot:'KeyK', silentAim:'KeyX', autoFire:'KeyY',
+    noRecoil:'KeyR', noSpread:'KeyZ', rapidFire:'KeyC', instantReload:'KeyB',
+    fly:'KeyL', speed:'KeyM', bhop:'KeyN', infJump:'KeyJ', noClip:'KeyU',
+    esp:'KeyH', fovCircle:'KeyI',
+    god:'KeyG', infAmmo:'KeyO',
+    killAll:'KeyP', spawnRandom:'KeyT',
+    panic:'Backquote',
+  };
+
+  /* ---------------------------------------------------------------
+     MODULE ACTIONS
+  --------------------------------------------------------------- */
+  function setGod(on){
+    st.god = on;
+    if (on){ player.maxHp = 1e6; player.hp = 1e6; }
+    else { player.maxHp = orig.maxHp; player.hp = Math.min(player.hp, orig.maxHp); player.invulnUntil = performance.now() + 1500; }
+  }
+  function setInfAmmo(on){
+    st.infAmmo = on;
+    D.WEAPONS.forEach(w => { if (on) { w.res = 1e9; w.reloading = 0; } else { w.res = w.reserve; } });
+    if (on) player.grenades = 99;
+  }
+  function setNoRecoil(on){
+    st.noRecoil = on;
+    D.RARITIES.forEach((r,i) => { r.recoil = on ? 0 : orig.rarity[i].recoil; });
+    D.WEAPONS.forEach((w,i) => { w.recoil = on ? 0 : orig.weapons[i].recoil; });
+  }
+  function setNoSpread(on){
+    st.noSpread = on;
+    D.RARITIES.forEach((r,i) => { r.spread = on ? 0 : orig.rarity[i].spread; });
+    D.WEAPONS.forEach((w,i) => { w.spread = on ? 0 : orig.weapons[i].spread; w.adsSpread = on ? 0 : orig.weapons[i].adsSpread; });
+  }
+  function setRapidFire(on){
+    st.rapidFire = on;
+    D.WEAPONS.forEach((w,i) => { w.rpm = on ? 3000 : orig.weapons[i].rpm; });
+  }
+  function setInstantReload(on){
+    // No more fooling with reloadS — we complete reloads directly in apply(),
+    // mirroring the game's own finish-reload code so the mag actually fills.
+    st.instantReload = on;
+  }
+  function setFly(on){ st.fly = on; if (on) player.vel.set(0,0,0); }
+  function setNoClip(on){ st.noClip = on; }
+  function setSpeed(on){ st.speed = on; }
+  function setBhop(on){ st.bhop = on; }
+  function setInfJump(on){ st.infJump = on; }
+  function setSlideSpam(on){ st.slideSpam = on; }
+  function setEsp(on){ st.esp = on; clearEsp(); }
+  function setFovCircle(on){
+    st.fovCircle = on;
+    const el = document.getElementById('nrFovCircle');
+    if (el) el.style.display = on ? '' : 'none';
+  }
+  function setPanel(on){
+    st.panel = on;
+    const p = document.getElementById('nrCheatPanel');
+    if (!p) return;
+    if (on){
+      p.style.display = '';
+      requestAnimationFrame(() => p.classList.add('nr-show'));
+    } else {
+      p.classList.remove('nr-show');
+      setTimeout(() => { if (!st.panel && p) p.style.display = 'none'; }, 280);
+    }
+  }
+  const TOGGLES = {
+    god:setGod, infAmmo:setInfAmmo, noRecoil:setNoRecoil, noSpread:setNoSpread,
+    rapidFire:setRapidFire, instantReload:setInstantReload,
+    fly:setFly, noClip:setNoClip, speed:setSpeed, bhop:setBhop, infJump:setInfJump, slideSpam:setSlideSpam,
+    esp:setEsp, fovCircle:setFovCircle, panel:setPanel,
+    aimbot:v => st.aimbot = v, silentAim:v => st.silentAim = v, autoFire:v => st.autoFire = v,
+    autoKill:v => st.autoKill = v,
+  };
+  function toggle(key){ const f = TOGGLES[key]; if (f) f(!st[key]); }
+
+  /* ---------------------------------------------------------------
+     AIMBOT — only active while right mouse is held (ADS / scoping)
+  --------------------------------------------------------------- */
+  const _eye = new V3(), _tgt = new V3();
+  function aimStep(dt){
+    if (!st.aimbot || !S.started || S.dead) return;
+    // Gate: aimbot requires right-click. Fall back to adsT in case
+    // pointer-lock swallowed our mouse event and the game's own flag
+    // is already engaged.
+    if (!rmbHeld && D.getAdsT() < 0.1) return;
+    _eye.set(player.pos.x, player.pos.y + 1.62, player.pos.z);
+    const fx = -Math.sin(player.yaw)*Math.cos(player.pitch), fy = Math.sin(player.pitch), fz = -Math.cos(player.yaw)*Math.cos(player.pitch);
+    const cosFov = Math.cos(st.aimFov * Math.PI/180);
+    let best = null, bestScore = Infinity;
+    const consider = (px,py,pz,prio) => {
+      const tx=px-_eye.x, ty=py-_eye.y, tz=pz-_eye.z;
+      const len = Math.hypot(tx,ty,tz); if (len < 0.05) return;
+      const dot = (tx*fx+ty*fy+tz*fz)/len;
+      if (dot < cosFov) return;
+      if (!D.hasLOS(_eye, _tgt.set(px,py,pz))) return;
+      let score;
+      if (st.aimTarget === 'closest') score = len;
+      else if (st.aimTarget === 'lowesthp') score = prio;
+      else score = 1 - dot;
+      if (score < bestScore){ bestScore = score; best = { tx,ty,tz,len }; }
+    };
+    for (const e of D.enemies){
+      if (e.dead) continue;
+      consider(e.group.position.x, e.group.position.y + 1.92*e.type.scale, e.group.position.z, e.hp);
+    }
+    for (const rp of net.players.values()){
+      if (!rp.group.visible || rp.group.position.y < -20 || D.isTeammate(rp)) continue;
+      consider(rp.group.position.x, rp.group.position.y + 1.92, rp.group.position.z, 100);
+    }
+    if (!best) return;
+    const dx=best.tx/best.len, dy=best.ty/best.len, dz=best.tz/best.len;
+    const yaw = Math.atan2(-dx,-dz);
+    const pitch = Math.asin(clamp(dy,-1,1));
+    const k = clamp(st.aimSmooth, 0.05, 1);
+    player.yaw += angDiff(yaw, player.yaw) * k;
+    player.pitch += (pitch - player.pitch) * k;
+    player.pitch = clamp(player.pitch, -1.45, 1.45);
+    D.camera.rotation.set(player.pitch, player.yaw, 0);
+  }
+
+  /* ---------------------------------------------------------------
+     SILENT AIM — always active when enabled (separate module)
+  --------------------------------------------------------------- */
+  let silentAimTarget = null;
+  function findSilentTarget(){
+    if (!st.silentAim || !S.started || S.dead) return null;
+    _eye.set(player.pos.x, player.pos.y + 1.62, player.pos.z);
+    const fx = -Math.sin(player.yaw)*Math.cos(player.pitch), fy = Math.sin(player.pitch), fz = -Math.cos(player.yaw)*Math.cos(player.pitch);
+    const cosFov = Math.cos(st.silentFov * Math.PI/180);
+    let best = null, bestLen = Infinity;
+    const consider = (px,py,pz) => {
+      const tx=px-_eye.x, ty=py-_eye.y, tz=pz-_eye.z;
+      const len = Math.hypot(tx,ty,tz); if (len < 0.05) return;
+      if ((tx*fx+ty*fy+tz*fz)/len < cosFov) return;
+      if (len >= bestLen) return;
+      if (!D.hasLOS(_eye, _tgt.set(px,py,pz))) return;
+      bestLen = len;
+      best = { yaw:Math.atan2(-tx/len,-tz/len), pitch:Math.asin(clamp(ty/len,-1,1)) };
+    };
+    for (const e of D.enemies){
+      if (e.dead) continue;
+      consider(e.group.position.x, e.group.position.y + 1.92*e.type.scale, e.group.position.z);
+    }
+    for (const rp of net.players.values()){
+      if (!rp.group.visible || rp.group.position.y < -20 || D.isTeammate(rp)) continue;
+      consider(rp.group.position.x, rp.group.position.y + 1.92, rp.group.position.z);
+    }
+    return best;
+  }
+  const _origFireWeaponExposed = D.fireWeapon;
+  function silentFireWrap(){
+    if (!silentAimTarget){ _origFireWeaponExposed(); return; }
+    const oldYaw = player.yaw, oldPitch = player.pitch;
+    player.yaw = silentAimTarget.yaw;
+    player.pitch = silentAimTarget.pitch;
+    D.camera.rotation.set(player.pitch, player.yaw, 0);
+    try { _origFireWeaponExposed(); }
+    finally {
+      player.yaw = oldYaw;
+      player.pitch = oldPitch;
+      D.camera.rotation.set(player.pitch, player.yaw, 0);
+    }
+  }
+  D.fireWeapon = silentFireWrap;
+
+  /* ---------------------------------------------------------------
+     ESP
+  --------------------------------------------------------------- */
+  let espContainer = null, espSvg = null;
+  function ensureEsp(){
+    if (espContainer) return espContainer;
+    const css = document.createElement('style');
+    css.textContent = `
+      #nrEsp{position:fixed;inset:0;pointer-events:none;z-index:9998;overflow:hidden}
+      #nrEsp svg{position:absolute;inset:0;width:100%;height:100%}
+      .nrEb{position:absolute;box-sizing:border-box;border-radius:4px;
+        border:1px solid rgba(255,255,255,0.75);
+        box-shadow:0 0 10px rgba(255,255,255,0.18),inset 0 0 10px rgba(255,255,255,0.04);
+        transition:opacity .12s ease}
+      .nrEb.team{border-style:dashed;border-color:rgba(255,255,255,0.32);box-shadow:none}
+      .nrEn{position:absolute;font:500 9.5px/1.3 'SF Mono',Consolas,monospace;
+        color:#fff;letter-spacing:.08em;text-transform:uppercase;
+        text-shadow:0 1px 3px rgba(0,0,0,.95);white-space:nowrap;
+        transform:translate(-50%,0);pointer-events:none}
+      .nrEh{position:absolute;height:3px;border-radius:2px;overflow:hidden;
+        background:rgba(0,0,0,.6);box-shadow:0 0 0 1px rgba(255,255,255,0.12)}
+      .nrEh > i{display:block;height:100%;
+        background:linear-gradient(90deg, rgba(255,255,255,0.95), rgba(255,255,255,0.6));
+        transition:width .15s ease}
+    `;
+    document.head.appendChild(css);
+    espContainer = document.createElement('div');
+    espContainer.id = 'nrEsp';
+    document.body.appendChild(espContainer);
+    return espContainer;
+  }
+  function clearEsp(){ if (espContainer) espContainer.innerHTML = ''; espSvg = null; }
+  function ensureSvg(){
+    if (!espContainer) return null;
+    if (!espSvg){ espSvg = document.createElementNS('http://www.w3.org/2000/svg','svg'); espContainer.appendChild(espSvg); }
+    return espSvg;
+  }
+  function projBoxAABB(center, size, cam){
+    const [w,h,d] = size;
+    const pts = [];
+    for (let xi=0; xi<2; xi++) for (let yi=0; yi<2; yi++) for (let zi=0; zi<2; zi++){
+      const v = new V3(center.x + (xi?w/2:-w/2), center.y + (yi?h/2:-h/2), center.z + (zi?d/2:-d/2));
+      v.project(cam); pts.push(v);
+    }
+    return pts;
+  }
+  function drawEsp(){
+    if (!st.esp){ if (espContainer && espContainer.firstChild) clearEsp(); return; }
+    ensureEsp();
+    while (espContainer.firstChild) espContainer.removeChild(espContainer.firstChild);
+    espSvg = null;
+    const cam = D.camera;
+    const drawTarget = (pos, height, isEnemy, name, hp, maxHp) => {
+      const screenW = innerWidth, screenH = innerHeight;
+      const center = new V3(pos.x, pos.y + height/2, pos.z);
+      const pts = projBoxAABB(center, { x:0.75, y:height, z:0.75 }, cam);
+      let minX=Infinity, maxX=-Infinity, minY=Infinity, maxY=-Infinity, behind=0;
+      for (const v of pts){
+        if (v.z > 1) behind++;
+        const sx = (v.x*.5+.5)*screenW, sy = (-v.y*.5+.5)*screenH;
+        if (sx<minX)minX=sx; if (sx>maxX)maxX=sx;
+        if (sy<minY)minY=sy; if (sy>maxY)maxY=sy;
+      }
+      if (behind === 8) return;
+      const bw = maxX-minX, bh = maxY-minY;
+      if (bw <= 0 || bh <= 0 || bw > screenW*1.4 || bh > screenH*1.4) return;
+      const box = document.createElement('div');
+      box.className = 'nrEb' + (isEnemy ? '' : ' team');
+      box.style.cssText = `left:${minX}px;top:${minY}px;width:${bw}px;height:${bh}px`;
+      espContainer.appendChild(box);
+      const cx = (minX+maxX)/2;
+      if (st.espNames && name){
+        const tag = document.createElement('div');
+        tag.className = 'nrEn'; tag.textContent = name;
+        tag.style.cssText = `left:${cx}px;top:${minY-15}px`;
+        espContainer.appendChild(tag);
+      }
+      if (st.espHealth && hp != null && maxHp){
+        const bar = document.createElement('div');
+        bar.className = 'nrEh';
+        const w = Math.max(30, bw);
+        bar.style.cssText = `left:${cx-w/2}px;top:${maxY+4}px;width:${w}px`;
+        const fill = document.createElement('i');
+        fill.style.width = (clamp(hp/maxHp,0,1)*100)+'%';
+        bar.appendChild(fill);
+        espContainer.appendChild(bar);
+      }
+      if (st.espDistance){
+        const dist = cam.position.distanceTo(pos);
+        const d = document.createElement('div');
+        d.className = 'nrEn';
+        d.textContent = Math.round(dist) + 'M';
+        d.style.cssText = `left:${cx}px;top:${maxY+8}px;opacity:.6;font-size:8.5px`;
+        espContainer.appendChild(d);
+      }
+      if (st.espTracers){
+        const svg = ensureSvg();
+        const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+        line.setAttribute('x1', screenW/2);
+        line.setAttribute('y1', screenH);
+        line.setAttribute('x2', cx);
+        line.setAttribute('y2', maxY);
+        line.setAttribute('stroke', isEnemy ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.28)');
+        line.setAttribute('stroke-width', '1');
+        svg.appendChild(line);
+      }
+    };
+    for (const e of D.enemies){
+      if (e.dead) continue;
+      const sc = e.type.scale || 1;
+      drawTarget(e.group.position, 2.35*sc, true, e.type.name + ' · ' + Math.ceil(e.hp), e.hp, e.maxHp);
+    }
+    for (const rp of net.players.values()){
+      if (!rp.group.visible || rp.group.position.y < -20) continue;
+      drawTarget(rp.group.position, 2.35, !D.isTeammate(rp), rp.name || 'PLAYER', null, null);
+    }
+  }
+
+  /* ---------------------------------------------------------------
+     ACTIONS
+  --------------------------------------------------------------- */
+  function killAll(){ if (D.enemies) D.enemies.slice().forEach(e => { if (!e.dead) D.damageEnemy(e, 1e12); }); }
+  const ENEMY_KEYS = ['scout','soldier','stalker','brute','drone','sentinel','reaver','nemesis'];
+  function spawnRandom(){ D.spawnEnemy(ENEMY_KEYS[(Math.random()*ENEMY_KEYS.length)|0]); }
+  function unlockAll(){
+    D.PROGRESS.unlocked = D.SKINS.map(s => s.id);
+    D.PROGRESS.cash = Math.max(D.PROGRESS.cash, 999999);
+    D.PROGRESS.xp = Math.max(D.PROGRESS.xp, 6e7);
+    D.grantProgress(0,0,'CHEAT');
+    D.updateProgressUI && D.updateProgressUI();
+  }
+  function revive(){
+    S.dead = false; S.paused = false; player.hp = player.maxHp;
+    const el = document.getElementById('dead'); if (el) el.classList.add('hidden');
+    if (net.on && D.respawnDMPlayer) D.respawnDMPlayer(true);
+  }
+  function tp(x,y,z){ player.pos.set(x, y==null?player.pos.y:y, z); player.vel.set(0,0,0); }
+  function tpToNearestEnemy(){
+    const e = D.enemies && D.enemies.find(e => !e.dead);
+    if (!e) return addToast('NO TARGET', 'warn');
+    tp(e.group.position.x - Math.sin(e.group.rotation.y) * 3, null, e.group.position.z - Math.cos(e.group.rotation.y) * 3);
+  }
+  function panic(){
+    for (const k of Object.keys(TOGGLES)){
+      if (k === 'panel') continue;
+      if (st[k]) TOGGLES[k](false);
+    }
+    addToast('PANIC · ALL OFF', 'warn');
+  }
+  function resetSettings(){
+    for (const k of Object.keys(TOGGLES)){ if (k === 'panel') continue; try { TOGGLES[k](false); } catch(e){} }
+    Object.assign(st, { aimFov:120, aimSmooth:0.42, silentFov:200, flySpeed:20, speedMul:2.4, aimTarget:'crosshair' });
+    addToast('SETTINGS RESET', 'warn');
+    buildBody();
+  }
+
+  /* ---------------------------------------------------------------
+     PER-FRAME APPLY
+  --------------------------------------------------------------- */
+  function apply(dt){
+    if (st.god){ player.maxHp = 1e6; player.hp = 1e6; player.invulnUntil = performance.now() + 1e6; }
+    if (st.infAmmo){
+      D.WEAPONS.forEach(w => { w.res = 1e9; if (w.ammo < w.mag) w.ammo = w.mag; w.reloading = 0; });
+      player.grenades = 99;
+    }
+
+    /* INSTANT RELOAD — actually completes the reload instead of just
+       cancelling it. Mirrors the game's own finish-reload code path so
+       the mag is truly refilled from reserve. The reloadToken bump
+       also cancels the game's pending reload SFX timeouts. */
+    if (st.instantReload){
+      D.WEAPONS.forEach(w => {
+        if (w.reloading > 0){
+          const need = w.mag - w.ammo;
+          const take = Math.min(need, w.res);
+          w.ammo += take;
+          w.res -= take;
+          w.reloading = 0;
+          w.reloadToken = (w.reloadToken || 0) + 1;
+        }
+      });
+    }
+
+    if (st.autoFire) keys[K('fire')] = !keys[K('fire')];
+    if (st.autoKill){
+      st._killTimer = (st._killTimer || 0) - dt;
+      if (st._killTimer <= 0){ st._killTimer = 0.5; killAll(); }
+    }
+    if (st.fly) flyStep(dt);
+    if (st.noClip) noClipStep(dt);
+    if (st.speed && !st.fly && !st.noClip){
+      const m = st.speedMul - 1;
+      player.pos.x += player.vel.x * m * dt;
+      player.pos.z += player.vel.z * m * dt;
+    }
+    if (st.bhop && player.grounded) player.jumpBufferT = 0.14;
+    if (st.infJump && !player.grounded){
+      player.vel.y = Math.max(player.vel.y, 0);
+      if (keys[K('jump')]) player.vel.y = 7.6;
+    }
+    if (st.slideSpam && player.slideCd > 0) player.slideCd = 0;
+
+    if (st.aimbot) aimStep(dt);
+    silentAimTarget = st.silentAim ? findSilentTarget() : null;
+
+    const circ = document.getElementById('nrFovCircle');
+    if (circ){
+      const deg = st.aimbot ? st.aimFov : 0;
+      const rad = deg/2 * Math.PI/180;
+      const size = Math.tan(rad) * innerHeight / Math.tan(D.camera.fov/2 * Math.PI/180);
+      circ.style.width = size+'px';
+      circ.style.height = size+'px';
+      // Dim the circle when aimbot is enabled but RMB isn't held so it
+      // reads as "armed but idle".
+      const armed = st.aimbot && (rmbHeld || D.getAdsT() >= 0.1);
+      circ.style.opacity = st.aimbot ? (armed ? '1' : '0.32') : '0';
+    }
+  }
+  function flyStep(dt){
+    const sp = st.flySpeed;
+    let ix=0, iz=0;
+    if (D.bindDown('fwd'))   iz -= 1;
+    if (D.bindDown('back'))  iz += 1;
+    if (D.bindDown('left'))  ix -= 1;
+    if (D.bindDown('right')) ix += 1;
+    let wx=0, wz=0;
+    if (ix || iz){
+      const il = Math.hypot(ix,iz); ix/=il; iz/=il;
+      const c = Math.cos(player.yaw), s = Math.sin(player.yaw);
+      wx = (ix*c + iz*s) * sp; wz = (iz*c - ix*s) * sp;
+    }
+    let wy = 0;
+    if (D.bindDown('jump')) wy += sp;
+    if (D.bindDown('sprint') || D.bindDown('crouch')) wy -= sp;
+    player.vel.y = 21 * dt;
+    player.pos.x += wx*dt; player.pos.z += wz*dt; player.pos.y += wy*dt;
+    player.pos.y = clamp(player.pos.y, 0.2, 200);
+    const lim = 46 - 0.8;
+    player.pos.x = clamp(player.pos.x, -lim, lim);
+    player.pos.z = clamp(player.pos.z, -lim, lim);
+  }
+  function noClipStep(dt){
+    const sp = 24;
+    let ix=0, iz=0;
+    if (D.bindDown('fwd'))   iz -= 1;
+    if (D.bindDown('back'))  iz += 1;
+    if (D.bindDown('left'))  ix -= 1;
+    if (D.bindDown('right')) ix += 1;
+    let wx=0, wz=0;
+    if (ix || iz){
+      const il = Math.hypot(ix,iz); ix/=il; iz/=il;
+      const c = Math.cos(player.yaw), s = Math.sin(player.yaw);
+      wx = (ix*c + iz*s) * sp; wz = (iz*c - ix*s) * sp;
+    }
+    let wy = 0;
+    if (D.bindDown('jump')) wy += sp;
+    if (D.bindDown('sprint')) wy -= sp;
+    player.pos.x += wx*dt; player.pos.z += wz*dt; player.pos.y += wy*dt;
+    player.vel.set(0,0,0);
+  }
+
+  /* ---------------------------------------------------------------
+     UI
+  --------------------------------------------------------------- */
+  const style = document.createElement('style');
+  style.textContent = `
+    #nrCheatPanel{
+      position:fixed;left:16px;top:16px;
+      z-index:99999;width:340px;padding:0;
+      border-radius:14px;
+      font:11.5px/1.45 'SF Mono','Consolas','Monaco','Menlo',monospace;
+      color:rgba(255,255,255,0.92);
+      user-select:none;-webkit-user-select:none;
+      background:
+        linear-gradient(180deg, rgba(20,20,20,0.86) 0%, rgba(6,6,6,0.88) 60%, rgba(2,2,2,0.9) 100%);
+      border:1px solid rgba(255,255,255,0.08);
+      box-shadow:
+        0 24px 64px rgba(0,0,0,0.72),
+        0 2px 8px rgba(0,0,0,0.55),
+        0 0 0 1px rgba(255,255,255,0.02),
+        inset 0 1px 0 rgba(255,255,255,0.09),
+        inset 0 -1px 0 rgba(0,0,0,0.5);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      opacity:0;transform:translateX(-18px) scale(.98);
+      transition:opacity .26s ease, transform .3s cubic-bezier(.2,.9,.3,1.18);
+      overflow:hidden;
+    }
+    #nrCheatPanel.nr-show{opacity:1;transform:translateX(0) scale(1)}
+    #nrCheatPanel::before{
+      content:'';position:absolute;left:0;right:0;top:0;height:1px;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);
+      pointer-events:none;
+    }
+    #nrCheatPanel h1{
+      margin:0;padding:12px 14px 11px;
+      display:flex;align-items:center;gap:10px;
+      cursor:grab;
+      border-bottom:1px solid rgba(255,255,255,0.055);
+      background:linear-gradient(180deg, rgba(255,255,255,0.045), transparent);
+      transition:background .2s ease;
+    }
+    #nrCheatPanel h1:hover{background:linear-gradient(180deg, rgba(255,255,255,0.07), transparent)}
+    #nrCheatPanel h1:active{cursor:grabbing}
+    .nrGrip{display:inline-flex;flex-direction:column;gap:2.5px;opacity:.55;transition:opacity .2s ease}
+    #nrCheatPanel h1:hover .nrGrip{opacity:1}
+    .nrGrip i{display:block;width:11px;height:1px;border-radius:1px;
+      background:linear-gradient(90deg, rgba(255,255,255,0.9), rgba(255,255,255,0.3))}
+    .nrTitle{
+      flex:1;
+      font-size:10.5px;font-weight:600;letter-spacing:.22em;
+      color:#fff;
+      text-shadow:0 1px 0 rgba(255,255,255,0.06);
+    }
+    .nrTitle em{font-style:normal;color:rgba(255,255,255,0.4);font-weight:400;letter-spacing:.14em}
+    #nrCheatPanel h1 .nrKey{
+      color:rgba(255,255,255,0.55);
+      border:1px solid rgba(255,255,255,0.14);
+      border-radius:4px;padding:1px 6px;font-size:9.5px;min-width:20px;text-align:center;
+      background:rgba(255,255,255,0.02);
+      letter-spacing:.05em;
+    }
+    .nrTabs{
+      display:flex;gap:0;padding:5px 8px 0;
+      border-bottom:1px solid rgba(255,255,255,0.055);
+      position:relative;
+    }
+    .nrTab{
+      flex:1;padding:7px 2px 8px;
+      text-align:center;cursor:pointer;
+      font-size:9.5px;letter-spacing:.16em;
+      color:rgba(255,255,255,0.38);
+      font-weight:500;
+      position:relative;
+      transition:color .18s ease;
+    }
+    .nrTab::after{
+      content:'';position:absolute;left:22%;right:22%;bottom:-1px;height:1px;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.95), transparent);
+      transform:scaleX(0);
+      transition:transform .3s cubic-bezier(.2,.9,.3,1.2);
+    }
+    .nrTab:hover{color:rgba(255,255,255,0.75)}
+    .nrTab.active{color:#fff}
+    .nrTab.active::after{transform:scaleX(1)}
+    .nrBody{padding:9px;max-height:62vh;overflow-y:auto;overflow-x:hidden}
+    .nrBody::-webkit-scrollbar{width:5px}
+    .nrBody::-webkit-scrollbar-track{background:transparent}
+    .nrBody::-webkit-scrollbar-thumb{
+      background:linear-gradient(180deg, rgba(255,255,255,0.28), rgba(255,255,255,0.12));
+      border-radius:4px;
+    }
+    .nrRow{
+      position:relative;
+      display:flex;justify-content:space-between;align-items:center;gap:8px;
+      padding:8px 11px;margin:3px 0;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,0.05);
+      cursor:pointer;
+      background:rgba(255,255,255,0.015);
+      transition:border-color .18s ease, background .18s ease, transform .18s ease;
+      animation:nrRowIn .32s cubic-bezier(.2,.9,.3,1.1) both;
+      overflow:hidden;
+    }
+    @keyframes nrRowIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+    .nrRow::before{
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(135deg, rgba(255,255,255,0.07), transparent 55%);
+      opacity:0;pointer-events:none;transition:opacity .2s ease;
+    }
+    .nrRow:hover{
+      border-color:rgba(255,255,255,0.16);
+      background:rgba(255,255,255,0.03);
+    }
+    .nrRow:hover::before{opacity:1}
+    .nrRow.on{
+      border-color:rgba(255,255,255,0.35);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 70%, rgba(255,255,255,0.06) 100%);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.05),
+        0 6px 22px rgba(255,255,255,0.055),
+        inset 0 1px 0 rgba(255,255,255,0.14),
+        inset 0 -1px 0 rgba(0,0,0,0.35);
+      animation:nrPulse .38s ease;
+    }
+    @keyframes nrPulse{0%{transform:scale(1)}45%{transform:scale(1.02)}100%{transform:scale(1)}}
+    .nrRow.on::after{
+      content:'';position:absolute;left:0;top:22%;bottom:22%;width:2px;border-radius:2px;
+      background:linear-gradient(180deg, transparent, #fff 30%, #fff 70%, transparent);
+      box-shadow:0 0 10px rgba(255,255,255,0.55);
+      animation:nrBarIn .35s cubic-bezier(.2,.9,.3,1.2) both;
+    }
+    @keyframes nrBarIn{from{transform:scaleY(0);opacity:0}to{transform:scaleY(1);opacity:1}}
+    .nrRow b{
+      display:block;font-weight:500;letter-spacing:.08em;font-size:10.5px;
+      color:rgba(255,255,255,0.82);transition:color .18s ease;
+    }
+    .nrRow.on b{color:#fff}
+    .nrRow small{
+      display:block;color:rgba(255,255,255,0.32);font-size:9px;
+      font-weight:400;margin-top:2px;letter-spacing:.02em;transition:color .18s ease;
+    }
+    .nrRow.on small{color:rgba(255,255,255,0.48)}
+    .nrKey{
+      color:rgba(255,255,255,0.5);
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:4px;padding:1px 6px;font-size:9.5px;
+      min-width:24px;text-align:center;
+      background:rgba(255,255,255,0.02);
+      letter-spacing:.05em;
+      transition:all .18s ease;
+    }
+    .nrRow.on .nrKey{
+      color:#050505;
+      background:linear-gradient(180deg, #fff, rgba(230,230,230,0.85));
+      border-color:transparent;
+      box-shadow:0 2px 10px rgba(255,255,255,0.22), inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+    .nrActs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+    #nrCheatPanel button{
+      font:inherit;
+      color:rgba(255,255,255,0.85);
+      background:linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.09);
+      border-radius:7px;
+      padding:8px 8px;
+      cursor:pointer;
+      letter-spacing:.11em;
+      font-size:9.5px;
+      text-transform:uppercase;
+      font-weight:500;
+      transition:all .16s ease;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    #nrCheatPanel button:hover{
+      background:linear-gradient(180deg, rgba(255,255,255,0.13), rgba(255,255,255,0.05));
+      border-color:rgba(255,255,255,0.24);
+      color:#fff;
+      transform:translateY(-1px);
+      box-shadow:0 6px 18px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+    #nrCheatPanel button:active{transform:translateY(0) scale(.975)}
+    .nrSlider{
+      display:flex;align-items:center;gap:10px;
+      margin:7px 4px;font-size:9.5px;color:rgba(255,255,255,0.55);
+      letter-spacing:.08em;
+    }
+    .nrSlider > span:first-child{min-width:78px;color:rgba(255,255,255,0.45)}
+    .nrSlider > span:last-child{
+      min-width:38px;text-align:right;color:#fff;font-weight:500;
+      font-variant-numeric:tabular-nums;
+    }
+    .nrSlider input[type="range"]{
+      -webkit-appearance:none;appearance:none;
+      flex:1;height:3px;border-radius:3px;outline:none;
+      background:linear-gradient(90deg, rgba(255,255,255,0.55), rgba(255,255,255,0.1));
+    }
+    .nrSlider input[type="range"]::-webkit-slider-thumb{
+      -webkit-appearance:none;appearance:none;
+      width:12px;height:12px;border-radius:50%;
+      background:radial-gradient(circle at 35% 30%, #fff, #cfcfcf);
+      cursor:pointer;border:none;
+      box-shadow:0 0 0 3px rgba(255,255,255,0.14), 0 2px 8px rgba(0,0,0,0.6);
+      transition:transform .15s ease, box-shadow .15s ease;
+    }
+    .nrSlider input[type="range"]::-webkit-slider-thumb:hover{
+      transform:scale(1.18);
+      box-shadow:0 0 0 5px rgba(255,255,255,0.2), 0 2px 12px rgba(0,0,0,0.7);
+    }
+    .nrSlider input[type="range"]::-moz-range-thumb{
+      width:12px;height:12px;border-radius:50%;
+      background:#fff;cursor:pointer;border:none;
+      box-shadow:0 0 0 3px rgba(255,255,255,0.14), 0 2px 8px rgba(0,0,0,0.6);
+    }
+    .nrSlider .nrSelect{
+      flex:1;background:rgba(255,255,255,0.03);color:#fff;
+      border:1px solid rgba(255,255,255,0.1);border-radius:5px;
+      padding:4px 6px;font:inherit;font-size:9.5px;cursor:pointer;
+      letter-spacing:.06em;
+    }
+    .nrSlider .nrSelect:focus{outline:none;border-color:rgba(255,255,255,0.3)}
+    .nrSection{
+      font-size:8.5px;letter-spacing:.28em;color:rgba(255,255,255,0.3);
+      margin:12px 5px 5px;text-transform:uppercase;
+      display:flex;align-items:center;gap:8px;
+    }
+    .nrSection::before, .nrSection::after{
+      content:'';flex:1;height:1px;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    }
+    .nrSection::before{background:linear-gradient(90deg, transparent, rgba(255,255,255,0.1))}
+    .nrSection::after{background:linear-gradient(90deg, rgba(255,255,255,0.1), transparent)}
+    .nrFoot{
+      padding:8px 12px 10px;font-size:8.5px;
+      color:rgba(255,255,255,0.28);
+      letter-spacing:.14em;text-transform:uppercase;text-align:center;
+      border-top:1px solid rgba(255,255,255,0.05);
+      background:linear-gradient(180deg, transparent, rgba(0,0,0,0.35));
+    }
+    .nrBindBtn{
+      background:rgba(255,255,255,0.03) !important;
+      border:1px solid rgba(255,255,255,0.1) !important;
+      border-radius:4px !important;
+      padding:1px 7px !important;
+      font-size:9.5px !important;
+      color:rgba(255,255,255,0.6) !important;
+      cursor:pointer;min-width:32px;text-align:center;
+      letter-spacing:.06em;
+      transition:all .16s ease;
+    }
+    .nrBindBtn:hover{background:rgba(255,255,255,0.1) !important;color:#fff !important;border-color:rgba(255,255,255,0.25) !important}
+    .nrBindBtn.waiting{
+      color:#0a0a0a !important;
+      background:linear-gradient(180deg, #fff, #dcdcdc) !important;
+      border-color:transparent !important;
+      animation:nrBlink .85s ease-in-out infinite;
+    }
+    @keyframes nrBlink{0%,100%{opacity:1}50%{opacity:.55}}
+    #nrFovCircle{
+      position:fixed;left:50%;top:50%;
+      transform:translate(-50%,-50%);
+      border:1px solid rgba(255,255,255,0.22);
+      border-radius:50%;pointer-events:none;z-index:9997;
+      display:none;
+      box-shadow:
+        0 0 60px rgba(255,255,255,0.06),
+        inset 0 0 60px rgba(255,255,255,0.02);
+      transition:opacity .2s ease;
+      animation:nrFovPulse 3.2s ease-in-out infinite;
+    }
+    @keyframes nrFovPulse{
+      0%,100%{border-color:rgba(255,255,255,0.16)}
+      50%{border-color:rgba(255,255,255,0.34)}
+    }
+    #nrToast{
+      position:fixed;left:50%;bottom:86px;
+      transform:translate(-50%, 22px) scale(.96);
+      padding:9px 18px;border-radius:9px;
+      font:500 10.5px/1.35 'SF Mono','Consolas',monospace;
+      letter-spacing:.14em;text-transform:uppercase;
+      color:#fff;
+      background:linear-gradient(180deg, rgba(24,24,24,0.94), rgba(4,4,4,0.92));
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:
+        0 16px 44px rgba(0,0,0,0.75),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      z-index:100000;opacity:0;pointer-events:none;
+      transition:all .28s cubic-bezier(.2,.9,.3,1.15);
+      white-space:nowrap;
+    }
+    #nrToast.show{opacity:1;transform:translate(-50%, 0) scale(1)}
+    #nrToast.warn{border-color:rgba(255,255,255,0.28)}
+  `;
+  document.head.appendChild(style);
+
+  const fovCircle = document.createElement('div');
+  fovCircle.id = 'nrFovCircle';
+  document.body.appendChild(fovCircle);
+
+  const toastEl = document.createElement('div');
+  toastEl.id = 'nrToast';
+  document.body.appendChild(toastEl);
+  let toastTimer = 0;
+  function addToast(msg, kind=''){
+    toastEl.textContent = msg;
+    toastEl.className = 'show ' + kind;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toastEl.className = kind; }, 1400);
+  }
+
+  /* ---------------------------------------------------------------
+     PANEL
+  --------------------------------------------------------------- */
+  const panel = document.createElement('div');
+  panel.id = 'nrCheatPanel';
+  panel.innerHTML = `
+    <h1>
+      <span class="nrGrip"><i></i><i></i><i></i></span>
+      <span class="nrTitle">NR-CHEATS <em>V3.1</em></span>
+      <span class="nrKey">V</span>
+    </h1>
+    <div class="nrTabs"></div>
+    <div class="nrBody"></div>
+    <div class="nrFoot">drag header to move · click keys to rebind</div>
+  `;
+  document.body.appendChild(panel);
+
+  if (st.panelPos){
+    panel.style.left = st.panelPos.x + 'px';
+    panel.style.top = st.panelPos.y + 'px';
+  } else {
+    panel.style.left = '16px';
+    requestAnimationFrame(() => {
+      const h = panel.offsetHeight || 400;
+      panel.style.top = Math.max(16, (innerHeight - h) / 2) + 'px';
+    });
+  }
+
+  /* ---------- DRAG ---------- */
+  const header = panel.querySelector('h1');
+  let dragState = null;
+  header.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return;
+    if (e.target.closest('.nrKey')) return;
+    e.preventDefault(); e.stopPropagation();
+    const rect = panel.getBoundingClientRect();
+    panel.style.left = rect.left + 'px';
+    panel.style.top = rect.top + 'px';
+    dragState = { startX: e.clientX, startY: e.clientY, origLeft: rect.left, origTop: rect.top, w: rect.width, h: rect.height };
+    document.body.style.userSelect = 'none';
+    document.body.style.webkitUserSelect = 'none';
+    panel.style.transition = 'none';
+  });
+  function onDragMove(e){
+    if (!dragState) return;
+    const dx = e.clientX - dragState.startX;
+    const dy = e.clientY - dragState.startY;
+    let nx = dragState.origLeft + dx;
+    let ny = dragState.origTop + dy;
+    nx = clamp(nx, 4, innerWidth - dragState.w - 4);
+    ny = clamp(ny, 4, innerHeight - dragState.h - 4);
+    panel.style.left = nx + 'px';
+    panel.style.top = ny + 'px';
+    st.panelPos = { x: nx, y: ny };
+  }
+  function onDragEnd(){
+    if (!dragState) return;
+    dragState = null;
+    document.body.style.userSelect = '';
+    document.body.style.webkitUserSelect = '';
+    panel.style.transition = '';
+  }
+  window.addEventListener('mousemove', onDragMove);
+  window.addEventListener('mouseup', onDragEnd);
+
+  const tabsEl = panel.querySelector('.nrTabs');
+  const bodyEl = panel.querySelector('.nrBody');
+
+  const TABS = {
+    combat: { label:'COMBAT', rows: [
+      { id:'aimbot', label:'AIMBOT', hint:'hold RMB to lock head' },
+      { id:'silentAim', label:'SILENT AIM', hint:'redirect bullets only' },
+      { id:'autoFire', label:'AUTO FIRE', hint:'hold-free fire' },
+      { id:'noRecoil', label:'NO RECOIL', hint:'remove kick' },
+      { id:'noSpread', label:'NO SPREAD', hint:'laser accuracy' },
+      { id:'rapidFire', label:'RAPID FIRE', hint:'max rpm' },
+      { id:'instantReload', label:'INSTANT RELOAD', hint:'finish reload in 1 frame' },
+    ]},
+    movement: { label:'MOVE', rows: [
+      { id:'fly', label:'FLY', hint:'free flight' },
+      { id:'noClip', label:'NO-CLIP', hint:'pass through walls' },
+      { id:'speed', label:'SPEED HACK', hint:'multiplier' },
+      { id:'bhop', label:'BUNNY HOP', hint:'auto-jump' },
+      { id:'infJump', label:'INFINITE JUMP', hint:'mid-air jumps' },
+      { id:'slideSpam', label:'SLIDE SPAM', hint:'no slide cooldown' },
+    ]},
+    visuals: { label:'VISUAL', rows: [
+      { id:'esp', label:'ESP', hint:'boxes + info' },
+      { id:'fovCircle', label:'FOV CIRCLE', hint:'show aimbot fov' },
+    ]},
+    player: { label:'PLAYER', rows: [
+      { id:'god', label:'GOD MODE', hint:'infinite hp' },
+      { id:'infAmmo', label:'INFINITE AMMO', hint:'never run dry' },
+    ]},
+    world: { label:'WORLD', rows: [
+      { id:'autoKill', label:'AUTO KILL', hint:'pulse kill all' },
+    ]},
+    binds: { label:'BINDS', rows: [] },
+    config: { label:'CONFIG', rows: [] },
+  };
+
+  let rowEls = {};
+  function buildTabs(){
+    tabsEl.innerHTML = '';
+    for (const key of Object.keys(TABS)){
+      const t = document.createElement('div');
+      t.className = 'nrTab' + (st.tab === key ? ' active' : '');
+      t.textContent = TABS[key].label;
+      t.onclick = () => { st.tab = key; buildTabs(); buildBody(); };
+      tabsEl.appendChild(t);
+    }
+  }
+  function buildBody(){
+    bodyEl.innerHTML = '';
+    rowEls = {};
+    if (st.tab === 'binds'){ buildBinds(); return; }
+    if (st.tab === 'config'){ buildConfig(); return; }
+    const tab = TABS[st.tab];
+    tab.rows.forEach((r, i) => {
+      const row = document.createElement('div');
+      row.className = 'nrRow' + (st[r.id] ? ' on' : '');
+      row.style.animationDelay = (i * 0.024) + 's';
+      row.innerHTML = `<div><b>${r.label}</b><small>${r.hint}</small></div>
+                       <span class="nrKey" data-bind="${r.id}">${friendlyKey(BINDS[r.id])}</span>`;
+      row.onclick = (e) => {
+        if (e.target.classList.contains('nrKey')){ startBind(r.id, e.target); return; }
+        toggle(r.id);
+        addToast((st[r.id] ? 'ON · ' : 'OFF · ') + r.label, st[r.id] ? '' : 'warn');
+      };
+      rowEls[r.id] = row;
+      bodyEl.appendChild(row);
+    });
+    if (st.tab === 'combat'){
+      addSection('TUNING');
+      addSlider('AIM FOV', 'aimFov', 10, 360, 1, v => v+'°');
+      addSlider('AIM SMOOTH', 'aimSmooth', 0.05, 1, 0.01, v => Math.round(v*100)+'%');
+      addSlider('SILENT FOV', 'silentFov', 10, 360, 1, v => v+'°');
+      addSelect('AIM TARGET', 'aimTarget', ['crosshair','closest','lowesthp']);
+    }
+    if (st.tab === 'movement'){
+      addSection('TUNING');
+      addSlider('FLY SPEED', 'flySpeed', 4, 60, 1, v => v);
+      addSlider('SPEED MULT', 'speedMul', 1, 8, 0.1, v => '×'+v.toFixed(1));
+    }
+    if (st.tab === 'visuals'){
+      addSection('ESP ELEMENTS');
+      addToggleSub('espBoxes', 'ESP BOXES');
+      addToggleSub('espNames', 'ESP NAMES');
+      addToggleSub('espHealth', 'ESP HEALTH');
+      addToggleSub('espTracers', 'ESP TRACERS');
+      addToggleSub('espDistance', 'ESP DISTANCE');
+    }
+    if (st.tab === 'world'){
+      addSection('ACTIONS');
+      const acts = document.createElement('div');
+      acts.className = 'nrActs';
+      acts.innerHTML = `
+        <button data-a="kill">KILL ALL</button>
+        <button data-a="spawn">SPAWN ENEMY</button>
+        <button data-a="unlock">UNLOCK ALL</button>
+        <button data-a="revive">REVIVE</button>
+        <button data-a="tpEnemy">TP TO ENEMY</button>
+        <button data-a="tpAir">FLY UP</button>
+        <button data-a="panic">ALL OFF</button>
+        <button data-a="reset">RESET</button>
+      `;
+      acts.addEventListener('click', e => {
+        const a = e.target.dataset && e.target.dataset.a;
+        if (!a) return;
+        if (a === 'kill') { killAll(); addToast('KILL ALL'); }
+        else if (a === 'spawn') { spawnRandom(); addToast('SPAWNED'); }
+        else if (a === 'unlock') { unlockAll(); addToast('UNLOCKED'); }
+        else if (a === 'revive') { revive(); addToast('REVIVED'); }
+        else if (a === 'tpEnemy') { tpToNearestEnemy(); }
+        else if (a === 'tpAir') tp(player.pos.x, 30, player.pos.z);
+        else if (a === 'panic') panic();
+        else if (a === 'reset') resetSettings();
+      });
+      bodyEl.appendChild(acts);
+    }
+  }
+  function addSection(label){
+    const s = document.createElement('div');
+    s.className = 'nrSection'; s.textContent = label;
+    bodyEl.appendChild(s);
+  }
+  function addSlider(label, key, min, max, step, fmt){
+    const el = document.createElement('div');
+    el.className = 'nrSlider';
+    el.innerHTML = `<span>${label}</span>
+                    <input type="range" min="${min}" max="${max}" step="${step}" value="${st[key]}">
+                    <span>${fmt(st[key])}</span>`;
+    const inp = el.querySelector('input');
+    const out = el.querySelector('span:last-child');
+    inp.oninput = () => { st[key] = parseFloat(inp.value); out.textContent = fmt(st[key]); };
+    bodyEl.appendChild(el);
+  }
+  function addSelect(label, key, options){
+    const el = document.createElement('div');
+    el.className = 'nrSlider';
+    el.innerHTML = `<span>${label}</span><select class="nrSelect"></select>`;
+    const sel = el.querySelector('select');
+    options.forEach(o => {
+      const opt = document.createElement('option');
+      opt.value = o; opt.textContent = o.toUpperCase();
+      if (st[key] === o) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    sel.onchange = () => { st[key] = sel.value; };
+    bodyEl.appendChild(el);
+  }
+  function addToggleSub(key, label){
+    const row = document.createElement('div');
+    row.className = 'nrRow' + (st[key] ? ' on' : '');
+    row.style.marginLeft = '8px';
+    row.innerHTML = `<div><b>${label}</b></div>`;
+    row.onclick = () => { st[key] = !st[key]; row.classList.toggle('on', st[key]); };
+    bodyEl.appendChild(row);
+  }
+
+  let bindingKey = null;
+  function buildBinds(){
+    const info = document.createElement('div');
+    info.style.cssText = 'font-size:9.5px;color:rgba(255,255,255,0.35);padding:6px 4px 10px;text-align:center;letter-spacing:.14em;text-transform:uppercase';
+    info.textContent = 'click a key badge, then press any key';
+    bodyEl.appendChild(info);
+    Object.keys(BINDS).forEach((id, i) => {
+      const row = document.createElement('div');
+      row.className = 'nrRow';
+      row.style.animationDelay = (i * 0.018) + 's';
+      const label = id.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase());
+      row.innerHTML = `<div><b>${label}</b></div>
+                       <span class="nrKey">${friendlyKey(BINDS[id])}</span>`;
+      row.onclick = () => startBind(id, row.querySelector('.nrKey'));
+      bodyEl.appendChild(row);
+    });
+  }
+  function startBind(id, el){
+    bindingKey = id;
+    el.classList.add('waiting');
+    el.textContent = '· · ·';
+    const handler = (e) => {
+      e.preventDefault(); e.stopPropagation();
+      window.removeEventListener('keydown', handler, true);
+      bindingKey = null;
+      if (e.code !== 'Escape'){
+        BINDS[id] = e.code;
+        addToast('BOUND · ' + id.toUpperCase() + ' → ' + friendlyKey(e.code));
+      }
+      buildBody();
+    };
+    window.addEventListener('keydown', handler, true);
+  }
+  function friendlyKey(code){
+    if (!code) return '—';
+    return code.replace(/^Key/, '').replace(/^Digit/, '').replace(/^Numpad/, 'NUM ')
+      .replace(/^Control/, 'CTRL').replace(/^Shift/, 'SHIFT').replace(/^Alt/, 'ALT')
+      .replace('Left', ' L').replace('Right', ' R').toUpperCase();
+  }
+
+  const PRESETS = {
+    legit:    { aimbot:true, aimSmooth:0.55, aimFov:60, noRecoil:true, esp:false, fovCircle:false, silentAim:false },
+    rage:     { aimbot:true, aimSmooth:0.1, aimFov:360, noRecoil:true, noSpread:true, rapidFire:true, god:true, infAmmo:true, esp:true, fovCircle:true, silentAim:true, silentFov:360 },
+    movement: { fly:true, noClip:true, speed:true, bhop:true, infJump:true, god:true, infAmmo:true },
+    quiet:    { esp:true, espTracers:false, aimbot:false, silentAim:false, fovCircle:false },
+  };
+  function buildConfig(){
+    addSection('PRESETS');
+    for (const name of Object.keys(PRESETS)){
+      const row = document.createElement('div');
+      row.className = 'nrRow';
+      row.innerHTML = `<div><b>${name.toUpperCase()}</b><small>apply this preset</small></div>`;
+      row.onclick = () => { applyPreset(PRESETS[name]); addToast('PRESET · ' + name.toUpperCase()); };
+      bodyEl.appendChild(row);
+    }
+    addSection('PANEL');
+    const posRow = document.createElement('div');
+    posRow.className = 'nrRow';
+    posRow.innerHTML = `<div><b>RESET POSITION</b><small>recenter the panel</small></div>`;
+    posRow.onclick = () => {
+      st.panelPos = null;
+      panel.style.left = '16px';
+      const h = panel.offsetHeight || 400;
+      panel.style.top = Math.max(16, (innerHeight - h) / 2) + 'px';
+      addToast('PANEL RECENTERED');
+    };
+    bodyEl.appendChild(posRow);
+
+    addSection('SYSTEM');
+    const acts = document.createElement('div');
+    acts.className = 'nrActs';
+    acts.innerHTML = `<button data-a="panic">PANIC · ALL OFF</button>
+                      <button data-a="reset">RESET DEFAULTS</button>`;
+    acts.addEventListener('click', e => {
+      const a = e.target.dataset.a;
+      if (a === 'panic') panic();
+      if (a === 'reset') resetSettings();
+    });
+    bodyEl.appendChild(acts);
+  }
+  function applyPreset(p){
+    for (const [k,v] of Object.entries(p)){
+      if (st[k] !== undefined){
+        const f = TOGGLES[k];
+        if (f) f(v); else st[k] = v;
+      }
+    }
+    buildBody();
+  }
+
+  let refreshT = 0;
+  function refresh(){
+    for (const k in rowEls){
+      const el = rowEls[k];
+      if (!el) continue;
+      if (el.classList.contains('on') !== !!st[k]) el.classList.toggle('on', !!st[k]);
+      const keyEl = el.querySelector('.nrKey');
+      if (keyEl && BINDS[k]) keyEl.textContent = friendlyKey(BINDS[k]);
+    }
+  }
+
+  /* ---------------------------------------------------------------
+     HOTKEYS
+  --------------------------------------------------------------- */
+  function onKey(e){
+    if (e.repeat) return;
+    const ae = document.activeElement;
+    if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.tagName === 'SELECT')) return;
+    if (bindingKey) return;
+    for (const [id, code] of Object.entries(BINDS)){
+      if (code === e.code){
+        e.preventDefault(); e.stopPropagation();
+        if (id === 'togglePanel') { setPanel(!st.panel); return; }
+        if (id === 'panic') { panic(); return; }
+        if (id === 'killAll') { killAll(); addToast('KILL ALL'); return; }
+        if (id === 'spawnRandom') { spawnRandom(); addToast('SPAWNED'); return; }
+        if (TOGGLES[id]){
+          toggle(id);
+          addToast((st[id] ? 'ON · ' : 'OFF · ') + id.toUpperCase(), st[id] ? '' : 'warn');
+        }
+        return;
+      }
+    }
+  }
+  window.addEventListener('keydown', onKey, true);
+
+  /* ---------------------------------------------------------------
+     LOOP
+  --------------------------------------------------------------- */
+  let raf = 0, last = performance.now();
+  function tick(){
+    raf = requestAnimationFrame(tick);
+    const now = performance.now();
+    const dt = Math.min(0.05, (now - last)/1000) || 0.016;
+    last = now;
+    try { apply(dt); } catch(err){}
+    try { drawEsp(); } catch(err){}
+    refreshT -= dt;
+    if (refreshT <= 0){ refreshT = 0.2; refresh(); }
+  }
+  raf = requestAnimationFrame(tick);
+
+  buildTabs();
+  buildBody();
+  requestAnimationFrame(() => panel.classList.add('nr-show'));
+
+  /* ---------------------------------------------------------------
+     DESTROY
+  --------------------------------------------------------------- */
+  function destroy(){
+    cancelAnimationFrame(raf);
+    window.removeEventListener('keydown', onKey, true);
+    window.removeEventListener('mousemove', onDragMove);
+    window.removeEventListener('mouseup', onDragEnd);
+    window.removeEventListener('mousedown', onRmbDown, true);
+    window.removeEventListener('mouseup', onRmbUp, true);
+    window.removeEventListener('blur', onWindowBlur);
+    document.removeEventListener('mousedown', onRmbDown, true);
+    document.removeEventListener('mouseup', onRmbUp, true);
+    try { D.fireWeapon = _origFireWeaponExposed; } catch(e){}
+    for (const k of Object.keys(TOGGLES)){
+      if (k === 'panel') continue;
+      try { TOGGLES[k](false); } catch(e){}
+    }
+    D.RARITIES.forEach((r,i) => { r.dmg = orig.rarity[i].dmg; r.spread = orig.rarity[i].spread; r.recoil = orig.rarity[i].recoil; });
+    D.WEAPONS.forEach((w,i) => { w.rpm = orig.weapons[i].rpm; w.spread = orig.weapons[i].spread; w.adsSpread = orig.weapons[i].adsSpread; w.recoil = orig.weapons[i].recoil; w.reloadS = orig.weapons[i].reloadS; });
+    player.maxHp = orig.maxHp;
+    player.hp = Math.min(player.hp, orig.maxHp);
+    keys[K('fire')] = false;
+    clearEsp();
+    panel.classList.remove('nr-show');
+    setTimeout(() => { panel.remove(); style.remove(); fovCircle.remove(); toastEl.remove(); }, 300);
+    if (window.__cheats === api) window.__cheats = null;
+    console.log('[NR-CHEATS] removed');
+  }
+
+  const api = {
+    st, BINDS, toggle, setPanel, panic, destroy,
+    get rmbHeld(){ return rmbHeld; },
+    help: () => console.table(BINDS),
+    set: (k,v) => { const f = TOGGLES[k]; if (f) f(v); },
+    resetPosition: () => { st.panelPos = null; panel.style.left = '16px'; panel.style.top = Math.max(16, (innerHeight - panel.offsetHeight)/2) + 'px'; },
+  };
+  window.__cheats = api;
+  console.log('%c[NR-CHEATS v3.1] loaded · press V · aimbot needs RMB held · drag header to move', 'color:#fff;font-weight:bold');
+})();
+  </script>
+
+  <script>
+    (() => {
+      const payloadEl = document.getElementById('payload');
+      const raw = payloadEl.textContent.replace(/^\n/, '').replace(/\s+$/, '');
+
+      // Line numbers
+      const lineCount = raw.split('\n').length;
+      document.getElementById('lineCount').textContent = lineCount + ' lines';
+      const gutter = document.getElementById('gutter');
+      let gHtml = '';
+      for (let i = 1; i <= lineCount; i++) gHtml += i + '\n';
+      gutter.textContent = gHtml;
+
+      // Render code with a lightweight monochrome tokenizer.
+      const escapeHtml = (s) => s
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      function highlight(src) {
+        // We tokenize on: block comments, line comments, template literals, strings, keywords, numbers, punctuation.
+        const out = [];
+        let i = 0;
+        const N = src.length;
+
+        const isIdStart = (c) => /[A-Za-z_$]/.test(c);
+        const isId = (c) => /[A-Za-z0-9_$]/.test(c);
+        const isDigit = (c) => /[0-9]/.test(c);
+
+        const KEYWORDS = new Set([
+          'const','let','var','function','return','if','else','for','while','do',
+          'switch','case','break','continue','new','typeof','instanceof','in','of',
+          'class','extends','super','this','null','undefined','true','false',
+          'try','catch','finally','throw','delete','void','yield','async','await',
+          'static','get','set','export','import','from','default'
+        ]);
+
+        while (i < N) {
+          const c = src[i];
+
+          // block comment
+          if (c === '/' && src[i+1] === '*') {
+            let j = i + 2;
+            while (j < N && !(src[j] === '*' && src[j+1] === '/')) j++;
+            j = Math.min(N, j + 2);
+            out.push('<span class="tok-com">' + escapeHtml(src.slice(i, j)) + '</span>');
+            i = j; continue;
+          }
+          // line comment
+          if (c === '/' && src[i+1] === '/') {
+            let j = i + 2;
+            while (j < N && src[j] !== '\n') j++;
+            out.push('<span class="tok-com">' + escapeHtml(src.slice(i, j)) + '</span>');
+            i = j; continue;
+          }
+          // template literal
+          if (c === '`') {
+            let j = i + 1;
+            let depth = 0;
+            while (j < N) {
+              if (src[j] === '\\') { j += 2; continue; }
+              if (src[j] === '$' && src[j+1] === '{') { depth++; j += 2; continue; }
+              if (src[j] === '}' && depth > 0) { depth--; j++; continue; }
+              if (src[j] === '`' && depth === 0) { j++; break; }
+              j++;
+            }
+            out.push('<span class="tok-tmpl">' + escapeHtml(src.slice(i, j)) + '</span>');
+            i = j; continue;
+          }
+          // single / double quoted string
+          if (c === '"' || c === "'") {
+            const q = c;
+            let j = i + 1;
+            while (j < N) {
+              if (src[j] === '\\') { j += 2; continue; }
+              if (src[j] === q) { j++; break; }
+              if (src[j] === '\n') break;
+              j++;
+            }
+            out.push('<span class="tok-str">' + escapeHtml(src.slice(i, j)) + '</span>');
+            i = j; continue;
+          }
+          // identifier / keyword
+          if (isIdStart(c)) {
+            let j = i + 1;
+            while (j < N && isId(src[j])) j++;
+            const word = src.slice(i, j);
+            if (KEYWORDS.has(word)) out.push('<span class="tok-key">' + escapeHtml(word) + '</span>');
+            else out.push('<span class="tok-fn">' + escapeHtml(word) + '</span>');
+            i = j; continue;
+          }
+          // number
+          if (isDigit(c) || (c === '.' && isDigit(src[i+1]))) {
+            let j = i + 1;
+            while (j < N && /[0-9a-fA-FxX._+\-eE]/.test(src[j])) {
+              // stop on things that clearly aren't part of a number
+              if (src[j] === '-' && !/[eE]/.test(src[j-1])) break;
+              if (src[j] === '+' && !/[eE]/.test(src[j-1])) break;
+              j++;
+            }
+            out.push('<span class="tok-num">' + escapeHtml(src.slice(i, j)) + '</span>');
+            i = j; continue;
+          }
+          // punctuation / default
+          const esc = escapeHtml(c);
+          if (/[{}()\[\];,.:?=+\-*/%!&|<>^~]/.test(c)) {
+            out.push('<span class="tok-punc">' + esc + '</span>');
+          } else {
+            out.push(esc);
+          }
+          i++;
+        }
+        return out.join('');
+      }
+
+      document.getElementById('codeBlock').innerHTML = highlight(raw);
+
+      // Copy button
+      const btn = document.getElementById('copyBtn');
+      const label = document.getElementById('copyLabel');
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(raw);
+        } catch (err) {
+          // Fallback for non-secure contexts
+          const ta = document.createElement('textarea');
+          ta.value = raw;
+          ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); } catch (e) {}
+          document.body.removeChild(ta);
+        }
+        btn.classList.add('copied');
+        label.textContent = 'Copied';
+        clearTimeout(btn._t);
+        btn._t = setTimeout(() => {
+          btn.classList.remove('copied');
+          label.textContent = 'Copy';
+        }, 1600);
+      });
+    })();
+  </script>
+</body>
+</html>
